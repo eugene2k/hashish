@@ -1,0 +1,23 @@
+{
+    "manifest_version": 2,
+    "name": "Hashish",
+    "version": "0.1.0",
+    "description": "A password hashing addon for websites that store passwords in plain-text",
+    "icons": {},
+    "permissions": [
+        "activeTab",
+        "tabs"
+    ],
+    "background": {
+        "scripts": [
+            "hashish-bg.js"
+        ]
+    },
+    "page_action": {
+        "default_title": "Hashish",
+        "default_popup": "hashish-popup.html",
+        "show_matches": [
+            "<all_urls>"
+        ]
+    }
+}

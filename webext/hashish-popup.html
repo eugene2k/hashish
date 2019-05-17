@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>Hashish</title>
+    <style>
+        body {
+            margin: 2pt
+        }
+
+        p {
+            padding: 0 10pt 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        div#generation {
+            text-align: center
+        }
+
+        div#hash {
+            background-color: #99ccff;
+            margin-top: 12pt;
+            padding: 5pt 0;
+            text-align: center;
+            font-size: large;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<script src="hashish-popup.js"></script>
+
+<body>
+    <p>
+        <label for="input-key">Key:</label>
+        <input type="password" id="input-key">
+    </p>
+    <p>
+        <label for="input-salt">Salt:</label>
+        <input type="text" id="input-salt">
+    </p>
+    <p>
+        <input type="checkbox" id="use-special-chars">
+        <label for="use-special-chars">Use special characters</label>
+    </p>
+    <div id="generation">
+        <input type="button" id="generate" value="Generate" disabled>
+    </div>
+</body>
+
+</html>
