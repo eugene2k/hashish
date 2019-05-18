@@ -6,8 +6,8 @@ static mut ERROR: i8 = -1;
 fn convert(bytes: &[u8], use_special_chars: bool) -> Vec<u8> {
     use convert_base::Convert;
     let range = if use_special_chars { 94 } else { 62 };
-    let mut converter = Convert::new(256, range);
-    let out = converter.convert::<u8, u8>(&bytes.to_vec());
+    let converter = Convert::new(256, range);
+    let out = converter.convert::<u8, u8>(&bytes);
     if use_special_chars {
         out.iter().map(|byte| byte + 33).collect()
     } else {

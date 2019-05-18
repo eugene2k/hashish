@@ -8,7 +8,7 @@ edition = "2018"
 rust-argon2 = "0.4"
 wasm-bindgen = "0.2"
 wee_alloc = "0.4"
-convert-base = "1.0"
+convert-base = {git = "http://github.com/eugene2k/convert-base", branch = "refactoring"}
 
 [lib]
 crate-type = ["cdylib"]
