@@ -27,8 +27,13 @@ fn convert(bytes: &[u8], use_special_chars: bool) -> Vec<u8> {
 
 #[no_mangle]
 pub unsafe fn generate_password(salt: *mut i8, key: *mut i8, use_special_chars: bool) -> *mut i8 {
+    use argon2::{Config, Variant};
     use std::ffi::{CStr, CString};
-    let config = argon2::Config::default();
+    let config = Config {
+        hash_length: 16,
+        variant: Variant::Argon2id,
+        ..Config::default()
+    };
     let key = CStr::from_ptr(key);
     let salt = CStr::from_ptr(salt);
     let result = argon2::hash_raw(key.to_bytes(), salt.to_bytes(), &config);

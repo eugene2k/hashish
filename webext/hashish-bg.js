@@ -56,7 +56,7 @@ async function loadHasherModule() {
         let salt_cstr = str2cstr(salt);
         let pw_cstr = wasm.generate_password(salt_cstr, key_cstr, use_special_chars);
         wasm.dealloc_bytes(key_cstr, key.length);
-        wasm.dealloc_bytes(key_cstr, key.length);
+        wasm.dealloc_bytes(salt_cstr, salt.length);
         return cstr2str(pw_cstr);
     };
 }
