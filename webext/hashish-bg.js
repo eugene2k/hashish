@@ -29,7 +29,7 @@ browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 async function loadHasherModule() {
-    let { instance } = await fetch('hasher.wasm')
+    let { instance } = await fetch('hashish.wasm')
         .then(response => response.arrayBuffer())
         .then(bytes => WebAssembly.instantiate(bytes));
     let wasm = instance.exports;
