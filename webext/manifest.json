@@ -1,9 +1,12 @@
 {
     "manifest_version": 2,
     "name": "Hashish",
-    "version": "0.1.0",
-    "description": "A password hashing addon for websites that store passwords in plain-text",
-    "icons": {},
+    "version": "0.2.0",
+    "description": "A password generating addon that uses hashing to non-randomly generate passwords",
+    "icons": {
+        "48": "hashish.svg",
+        "96": "hashish.svg"
+    },
     "permissions": [
         "activeTab",
         "tabs"
@@ -16,6 +19,10 @@
     "page_action": {
         "default_title": "Hashish",
         "default_popup": "hashish-popup.html",
+        "default_icon": {
+            "19": "hashish.svg",
+            "38": "hashish.svg"
+        },
         "show_matches": [
             "<all_urls>"
         ]

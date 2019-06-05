@@ -26,17 +26,25 @@ fn convert(bytes: &[u8], use_special_chars: bool) -> Vec<u8> {
 }
 
 #[no_mangle]
-pub unsafe fn generate_password(salt: *mut i8, key: *mut i8, use_special_chars: bool) -> *mut i8 {
+pub unsafe fn generate_password(salt: *mut i8, key: *mut i8, hash_length: u32, use_special_chars: bool) -> *mut i8 {
     use argon2::{Config, Variant};
     use std::ffi::{CStr, CString};
     let config = Config {
-        hash_length: 16,
+        hash_length,
         variant: Variant::Argon2id,
         ..Config::default()
     };
     let key = CStr::from_ptr(key);
     let salt = CStr::from_ptr(salt);
-    let result = argon2::hash_raw(key.to_bytes(), salt.to_bytes(), &config);
+    let salt_bytes = salt.to_bytes();
+    let result = if salt_bytes.len() < 8 {
+        let mut padded_salt_bytes = [b'0';8];
+        padded_salt_bytes[0..salt_bytes.len()].copy_from_slice(salt_bytes);
+        argon2::hash_raw(key.to_bytes(), &padded_salt_bytes, &config)
+    } else {
+        argon2::hash_raw(key.to_bytes(), salt.to_bytes(), &config)
+    };
+    
     match result {
         Ok(hash) => {
             let password = hash;
@@ -91,6 +99,27 @@ mod tests {
     }
 
     #[test]
+    fn test_salt_too_short() {
+        let salt: &[u8] = b"www";
+        let key: &[u8] = b"hj";
+        let salt_cstring = std::ffi::CString::new(salt).unwrap();
+        let key_cstring = std::ffi::CString::new(key).unwrap();
+        let pw_cstring = unsafe {
+            generate_password(
+                salt_cstring.as_ptr() as *mut _,
+                key_cstring.as_ptr() as *mut _,
+                16,
+                false,
+            )
+        };
+        if pw_cstring != std::ptr::null_mut() {
+            unsafe {
+                dealloc_bytes(pw_cstring as *mut u8, cstring_len(pw_cstring));
+            }
+        }
+    }
+
+    #[test]
     fn test_generate_password() {
         let salt: &[u8] = b"www.reddit.com";
         let key: &[u8] = b"hj";
@@ -100,11 +129,14 @@ mod tests {
             generate_password(
                 salt_cstring.as_ptr() as *mut _,
                 key_cstring.as_ptr() as *mut _,
+                16,
                 false,
             )
         };
-        unsafe {
-            dealloc_bytes(pw_cstring as *mut u8, cstring_len(pw_cstring));
+        if pw_cstring != std::ptr::null_mut() {
+            unsafe {
+                dealloc_bytes(pw_cstring as *mut u8, cstring_len(pw_cstring));
+            }
         }
     }
 }
